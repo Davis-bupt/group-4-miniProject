@@ -11,6 +11,8 @@ spring:
 
   jpa:
     hibernate:
+      # MySQL demo: incrementally sync tables to the entities, never drop data
+      # (ARCHITECTURE.md §9).
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
