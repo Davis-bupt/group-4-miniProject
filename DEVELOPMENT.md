@@ -45,11 +45,15 @@ first, never drop a required endpoint).
 
 ## 4. Git Workflow
 
-- Two long-lived branches: `main` (stable, always demo-ready, always contains
-  docs) and `dev` (integration branch for active work). Short-lived branches
-  named `feature/desk`, `feature/booking`, `feature/creative` merge into `dev`
-  within 30–45 minutes of starting them; `dev` merges into `main` at each
-  checkpoint (see §3) once verified.
+- Two long-lived branches: `master` (the GitHub default, stable, always
+  demo-ready, always contains docs) and `dev` (integration branch for active
+  work). Short-lived branches named `feature/desk`, `feature/booking`,
+  `feature/creative` merge into `dev` within 30–45 minutes of starting them;
+  `dev` merges into `master` at each checkpoint (see §3) once verified.
+- `master` is branch-protected on GitHub: direct pushes are rejected, changes
+  must go through a pull request, and the PR needs a teammate's approval before
+  it can be merged. Budget a few minutes at each checkpoint for someone to
+  review and approve the `dev` → `master` PR — don't wait until the last minute.
 - Whoever touches the DB schema (entities) commits and pushes to `dev` **first**;
   everyone else pulls before starting their own work on top of it.
 - Commit message convention: `feat: ...`, `fix: ...`, `chore: ...`,
@@ -66,7 +70,7 @@ first, never drop a required endpoint).
 - JSON fields: camelCase. Dates: ISO-8601 (`LocalDate`, no manual formatting).
 - Controllers stay thin: no business logic, no direct repository calls.
 
-## 6. Definition of Done (per endpoint, before merging to `main`)
+## 6. Definition of Done (per endpoint, before merging to `master`)
 
 - [ ] Matches the frozen contract (field names, status codes).
 - [ ] Manually verified with curl/Postman for the success path **and** at least
