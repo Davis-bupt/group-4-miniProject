@@ -1,6 +1,7 @@
 package com.deskflow.common;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 /**
  * Unified error response body (ARCHITECTURE.md §8 / API.md).
@@ -10,6 +11,6 @@ import java.time.OffsetDateTime;
 public record ApiError(String error, String message, OffsetDateTime timestamp) {
 
     public static ApiError of(String error, String message) {
-        return new ApiError(error, message, OffsetDateTime.now());
+        return new ApiError(error, message, OffsetDateTime.now(ZoneOffset.UTC));
     }
 }

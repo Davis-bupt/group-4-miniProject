@@ -7,8 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
@@ -46,10 +46,15 @@ public class Booking {
     @Column(nullable = false)
     private LocalDate date;
 
-    /** Set automatically on insert. */
+    /**
+     * Set automatically on insert. Instant (not LocalDateTime) so it captures
+     * a true UTC point in time and Jackson serializes it with a trailing "Z",
+     * matching API.md's documented createdAt format exactly
+     * (e.g. "2026-07-23T10:15:00Z") regardless of the server's local zone.
+     */
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     protected Booking() {
         // JPA requires a no-arg constructor.
@@ -89,7 +94,7 @@ public class Booking {
         this.date = date;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 }

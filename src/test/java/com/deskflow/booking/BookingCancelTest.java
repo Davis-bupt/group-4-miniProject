@@ -13,12 +13,16 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Endpoint 5 — DELETE /api/bookings/{id}.
- * Runs against the H2 dev profile (Hibernate auto-creates the tables), so no
- * seed data is required — the test inserts its own booking via the repository.
+ * Runs against the H2 dev profile. schema.sql/data.sql now auto-seed real
+ * desks/bookings on startup (see ARCHITECTURE.md §9), so this test uses a
+ * far-future date to avoid colliding with the (desk_id, date) unique
+ * constraint on the seeded rows.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 class BookingCancelTest {
+
+    private static final LocalDate UNSEEDED_DATE = LocalDate.of(2099, 1, 1);
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,7 +33,7 @@ class BookingCancelTest {
     @Test
     void deletingExistingBookingReturns204AndRemovesIt() throws Exception {
         Booking saved = bookingRepository.save(
-                new Booking(1L, "Anna Kowalska", LocalDate.of(2026, 7, 24)));
+                new Booking(1L, "Anna Kowalska", UNSEEDED_DATE));
 
         mockMvc.perform(delete("/api/bookings/{id}", saved.getId()))
                 .andExpect(status().isNoContent());
