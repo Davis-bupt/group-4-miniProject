@@ -26,6 +26,8 @@ Controller  →  Service (business rules, @Transactional)  →  Repository (Spri
 
 ## 2. Package Structure (feature-first)
 
+Full path (Maven convention): `src/main/java/com/deskflow/...`
+
 ```
 com.deskflow
 ├── desk/            Desk entity, repository, service, controller, dto/
@@ -38,6 +40,26 @@ com.deskflow
 One package per domain concept from the brief (`desk`, `booking`) — matches the
 prescribed domain model exactly. No speculative packages (e.g. `user`, `auth`) are
 added since the brief explicitly excludes authentication.
+
+**Why package-by-feature instead of package-by-layer** (i.e. not
+`controller/`, `service/`, `repository/`, `entity/` top-level folders):
+
+1. **Parallel work without file collisions.** Whoever owns `desk` only touches
+   files under `desk/`; whoever owns `booking` only touches `booking/`. With
+   layer-first packages, two people editing different features would still be
+   adding files into the same shared `controller/`/`service/` folders.
+2. **High cohesion.** All classes for one business concept
+   (`Desk`, `DeskController`, `DeskService`, `DeskRepository`) sit together —
+   changing a feature means working in one folder, not jumping across four.
+3. **Maps directly to the domain model in the brief** (`desk`, `booking`), so
+   the code structure matches how the team talks about the project, including
+   during the presentation.
+4. **Cleaner to cut scope.** If a feature has to be dropped under time
+   pressure, deleting one folder removes it cleanly.
+
+Package-by-layer is a reasonable alternative for a 1–2 person project with a
+single entity, but for a 4–5 person team building two distinct modules in
+parallel under a 5-hour timebox, package-by-feature is the better fit.
 
 ## 3. Domain Model (as prescribed by the brief)
 
