@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 /** Request body for POST /api/bookings (API.md #3). */
 public record CreateBookingRequest(
-        @NotNull Long deskId,
-        @NotBlank String employeeName,
-        @NotNull LocalDate date
+        @NotNull(message = "is required") Long deskId,
+        @NotBlank(message = "must not be blank") String employeeName,
+        @NotNull(message = "is required") LocalDate date
 ) {
 }
