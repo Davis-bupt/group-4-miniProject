@@ -8,9 +8,13 @@ spring:
     username: sa
     password: ""
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     open-in-view: false
     show-sql: true
     properties:
