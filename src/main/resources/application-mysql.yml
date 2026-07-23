@@ -7,8 +7,9 @@ spring:
 
   jpa:
     hibernate:
-      # none = schema owned by the data lead's schema.sql, not auto-generated.
-      ddl-auto: none
+      # MySQL demo: incrementally sync tables to the entities, never drop data
+      # (ARCHITECTURE.md §9).
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
   h2:

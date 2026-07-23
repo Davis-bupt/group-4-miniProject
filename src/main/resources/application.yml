@@ -10,10 +10,11 @@ spring:
 
   jpa:
     hibernate:
-      # none = Hibernate does not create/alter tables. Schema is owned by the
-      # data lead via schema.sql (+ data.sql for seed), run by Spring on startup.
-      ddl-auto: none
+      # H2 dev: Hibernate builds tables from the entities on each startup and
+      # drops them on shutdown (ARCHITECTURE.md §9 — zero setup for teammates).
+      ddl-auto: create-drop
     open-in-view: false
+    defer-datasource-initialization: true
     show-sql: true
     properties:
       hibernate:
