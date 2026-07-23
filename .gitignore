@@ -24,3 +24,6 @@ target/
 
 ### macOS ###
 .DS_Store
+
+### Nested reference repo (has its own .git) ###
+group-4-miniProject/
