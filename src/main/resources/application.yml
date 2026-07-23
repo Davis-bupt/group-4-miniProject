@@ -8,11 +8,13 @@ spring:
     username: sa
     password: ""
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     hibernate:
-      # H2 dev: Hibernate builds tables from the entities on each startup and
-      # drops them on shutdown (ARCHITECTURE.md §9 — zero setup for teammates).
-      ddl-auto: create-drop
+      ddl-auto: none
     open-in-view: false
     defer-datasource-initialization: true
     show-sql: true

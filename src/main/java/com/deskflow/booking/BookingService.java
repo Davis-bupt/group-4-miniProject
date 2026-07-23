@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/** Business logic for bookings: create (3), list-by-date (4), cancel (5). */
 @Service
 public class BookingService {
 
@@ -72,5 +73,18 @@ public class BookingService {
         return bookings.stream()
                 .map(booking -> BookingResponse.from(booking, codesByDeskId.get(booking.getDeskId())))
                 .toList();
+    }
+
+    /**
+     * Endpoint 5 — cancel a booking by id.
+     *
+     * @throws NotFoundException if no booking has that id (→ 404 via GlobalExceptionHandler)
+     */
+    @Transactional
+    public void cancel(Long id) {
+        if (!bookingRepository.existsById(id)) {
+            throw new NotFoundException("Booking " + id + " not found");
+        }
+        bookingRepository.deleteById(id);
     }
 }

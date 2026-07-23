@@ -34,7 +34,7 @@ com.deskflow
 ├── booking/         Booking entity, repository, service, controller, dto/
 ├── health/          Health check controller
 ├── common/          GlobalExceptionHandler, ApiError, custom exceptions
-└── config/          Seed data loader, CORS/OpenAPI config
+└── config/          CORS/OpenAPI config (acctually not used)
 ```
 
 One package per domain concept from the brief (`desk`, `booking`) — matches the
@@ -120,7 +120,7 @@ flowchart LR
 | Spring Security | Brief excludes authentication |
 | Redis / caching | Data volume is tiny (8+ desks); adds config risk for no benefit |
 | Kafka / RabbitMQ | If the waitlist/notify creative idea is chosen, an in-memory `Map` simulates it |
-| Flyway / Liquibase | Single-run demo app; `ddl-auto` + seed loader is sufficient |
+| Flyway / Liquibase | Single-run demo app; `schema.sql` + `data.sql` SQL init is sufficient |
 | Docker / Compose | Brief marks this as optional stretch only |
 | API Gateway | Single monolith, no service-to-service routing needed |
 
@@ -167,8 +167,10 @@ All error responses share one shape, produced by `GlobalExceptionHandler`:
 
 ## 9. Environments
 
-- **Local dev**: H2 in-memory (`application.yml`), `ddl-auto: create-drop`, fresh
-  seed data every start — zero setup for any teammate.
+- **Local dev**: H2 in-memory (`application.yml`), `ddl-auto: none`,
+   `spring.sql.init.mode: always`, and startup SQL scripts
+   (`src/main/resources/schema.sql` + `src/main/resources/data.sql`) so seed data
+   is fresh on every start with zero manual setup.
 - **Demo (MySQL, per brief's recommendation)**: `application-mysql.yml` profile,
   switched on right before the presentation to minimize environment risk during
   development.
