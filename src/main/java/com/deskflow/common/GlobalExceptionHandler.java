@@ -1,5 +1,6 @@
 package com.deskflow.common;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -49,10 +50,35 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", ex.getParameterName() + " is required");
     }
 
-    /** Wrong-typed param or unparseable body, e.g. date=not-a-date, floor=abc. */
+    /**
+     * Wrong-typed query param (e.g. date=not-a-date, floor=abc) or an
+     * unparseable request body (e.g. a malformed "date" field in POST
+     * /api/bookings).
+     *
+     * <p>API.md #3/#4 documents one message — "date is required" — for both
+     * the missing-date case (handled above by handleMissingParam) and the
+     * invalid-date-format case handled here, so the {@code date}
+     * param/field is special-cased to literally match that wording. Any
+     * other mistyped param/field gets a generic message since the doc
+     * doesn't specify wording for those.
+     */
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ApiError> handleTypeMismatch(Exception ex) {
+        if (isDateRelated(ex)) {
+            return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "date is required");
+        }
         return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Invalid or malformed request parameter");
+    }
+
+    private boolean isDateRelated(Exception ex) {
+        if (ex instanceof MethodArgumentTypeMismatchException mismatch) {
+            return "date".equals(mismatch.getName());
+        }
+        if (ex.getCause() instanceof InvalidFormatException invalidFormat) {
+            return invalidFormat.getPath().stream()
+                    .anyMatch(ref -> "date".equals(ref.getFieldName()));
+        }
+        return false;
     }
 
     /** Fallback — anything unmapped becomes a 500 rather than leaking a stack trace. */
