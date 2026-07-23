@@ -13,7 +13,7 @@ Rationale: single Spring Boot app, ~5 hour build window, 4–5 contributors work
 parallel. A layered monolith is the fastest to build, easiest to divide by module
 ownership, and the simplest to explain in a 10-minute presentation. Microservices,
 API gateways, or message brokers are explicitly rejected as out of scope for this
-timebox (see §6).
+timebox (see §5).
 
 ```
 Controller  →  Service (business rules, @Transactional)  →  Repository (Spring Data JPA)  →  DB
