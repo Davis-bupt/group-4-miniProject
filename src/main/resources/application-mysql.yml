@@ -7,7 +7,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      # none = schema owned by the data lead's schema.sql, not auto-generated.
+      ddl-auto: none
     database-platform: org.hibernate.dialect.MySQLDialect
 
   h2:
